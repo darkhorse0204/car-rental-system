@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1.5em 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        main {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: auto;
+            margin-bottom: 40px; /* Reduced from 100px since footer is no longer fixed */
+        }
+
+        section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .logout-btn:hover {
+            background-color: #dc3545;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: white;
+            max-width: 400px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 30px;
+        }
+
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 15px;
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.6;
+            padding: 5px;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 0.6;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            max-width: 400px;
+        }
+
+        .date-input-container {
+            position: relative;
+        }
+
+        .date-input-container label {
+            margin-bottom: 8px;
+        }
+
+        .total-amount {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #4CAF50;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #4CAF50;
+        }
+
+        button:active {
+            background-color: #4CAF50;
+        }
+
+        #carList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .car {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .car img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f8f8f8;
+            margin-bottom: 15px;
+        }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+            flex-grow: 1;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .car-details p {
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            padding: 4px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .car-details strong {
+            color: #333;
+            font-weight: 600;
+            min-width: 90px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .car-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px;
+            justify-content: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        .car-feature {
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .car button {
+            margin: 15px;
+            width: calc(100% - 30px);
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .car button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            width: 100%;
+            font-size: 14px;
+            margin-top: 40px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-message {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #555;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        #rent {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        #rent form {
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .quote-section {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            height: fit-content;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .quote-text {
+            font-size: 1.2em;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            font-weight: 600;
+            color: #4CAF50;
+            text-align: right;
+            margin-bottom: 0;
+        }
+
+        #search {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #search select {
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding: 20px 5%;
+            }
+            
+            #rent {
+                grid-template-columns: 1fr;
+            }
+            
+            .quote-section {
+                width: 100%;
+                max-width: 100%;
+                margin-top: 30px;
+            }
+            
+            .date-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #bookingHistory {
+            margin: 40px 5%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-list {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .booking-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .booking-item p {
+            margin: 5px 0;
+        }
+
+        #bookings {
+            margin-bottom: 30px;
+        }
+
+        .booking-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .booking-item h3 {
+            margin: 0 0 15px 0;
+            color: #4CAF50;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .booking-details p {
+            margin: 5px 0;
+        }
+
+        .status-confirmed {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .booking-alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ffeeba;
+            text-align: center;
+        }
+
+        .booking-alert p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @media (min-width: 1200px) {
+            #carList {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .car-image-container {
+            width: 100%;
+            height: 200px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .car-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .rent-button {
+            width: calc(100% - 30px);
+            margin: 15px;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .rent-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0 !important;
+            cursor: not-allowed;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Car Rental Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <main>
+        <section id="welcome">
+            <div class="welcome-message">
+                Welcome back, <span id="username-display">User</span>!
+            </div>
+        </section>
+
+        <section id="search">
+            <h2>Search for Cars</h2>
+            <label for="carType">Select Car Type:</label>
+            <select id="carType" onchange="searchCars()">
+                <option value="">All</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Hatchback">Hatchback</option>
+            </select>
+        </section>
+
+        <section id="results">
+            <h2>Available Cars</h2>
+            <div id="carList"></div>
+        </section>
+
+        <section id="bookings">
+            <h2>Your Bookings</h2>
+            <div id="bookingsList"></div>
+        </section>
+
+        <section id="rent">
+            <div class="form-container">
+                <h2>Rent a Car</h2>
+                <form id="rentForm" onsubmit="rentCar(); return false;">
+                    <label for="customerName">Name:</label>
+                    <input type="text" id="customerName" placeholder="Enter Your Name" required>
+                    
+                    <label for="mobileNumber">Mobile Number:</label>
+                    <input type="text" id="mobileNumber" placeholder="Enter Mobile Number" required>
+                    
+                    <label for="carId">Car ID:</label>
+                    <input type="text" id="carId" placeholder="Enter Car ID" required readonly>
+                    
+                    <div class="date-inputs">
+                        <div class="date-input-container">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        
+                        <div class="date-input-container">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                    </div>
+                    
+                    <label for="estimatedKm">Estimated Kilometers:</label>
+                    <input type="number" id="estimatedKm" placeholder="Enter estimated kilometers" required min="1">
+                    
+                    <p id="totalAmount" class="total-amount">Total Amount: Rs. 0</p>
+                    <button type="submit">Rent Now</button>
+                </form>
+            </div>
+            
+            <div class="quote-section">
+                <p class="quote-text" id="carQuote"></p>
+                <p class="quote-author" id="quoteAuthor"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Car Rental System. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Check authentication immediately to prevent flash
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (!userData) {
+            window.location.replace('/');
+        }
+
+        // Update the default cars data to ensure unique IDs
+        const defaultCars = [
+            {
+                id: 1,
+                type: 'Sedan',
+                brand: 'Toyota',
+                model: 'Corolla',
+                year: 2023,
+                transmission: 'Automatic',
+                fuel: 'Petrol',
+                seats: 5,
+                pricePerKm: 12,
+                image: '/images/toyota-corolla.jpg',
+                features: ['Bluetooth', 'Air Conditioning', 'GPS']
+            },
+            {
+                id: 2,
+                type: 'SUV',
+                brand: 'Honda',
+                model: 'CR-V',
+                year: 2023,
+                transmission: 'Automatic',
+                fuel: 'Petrol',
+                seats: 7,
+                pricePerKm: 15,
+                image: '/images/honda-crv.jpg',
+                features: ['Sunroof', 'Leather Seats', 'GPS']
+            },
+            {
+                id: 3,
+                type: 'Hatchback',
+                brand: 'Ford',
+                model: 'Fiesta',
+                year: 2023,
+                transmission: 'Manual',
+                fuel: 'Petrol',
+                seats: 5,
+                pricePerKm: 10,
+                image: '/images/ford-fiesta.jpg',
+                features: ['Bluetooth', 'Air Conditioning']
+            },
+            {
+                id: 4,
+                type: 'Sedan',
+                brand: 'Hyundai',
+                model: 'Elantra',
+                year: 2023,
+                transmission: 'Automatic',
+                fuel: 'Petrol',
+                seats: 5,
+                pricePerKm: 11,
+                image: '/images/hyundai-elantra.jpg',
+                features: ['Bluetooth', 'GPS', 'Leather Seats']
+            },
+            {
+                id: 5,
+                type: 'SUV',
+                brand: 'Kia',
+                model: 'Seltos',
+                year: 2023,
+                transmission: 'Automatic',
+                fuel: 'Petrol',
+                seats: 5,
+                pricePerKm: 14,
+                image: '/images/kia-seltos.jpg',
+                features: ['Sunroof', 'GPS', 'Air Conditioning']
+            },
+            {
+                id: 6,
+                type: 'Hatchback',
+                brand: 'Maruti',
+                model: 'Swift',
+                year: 2023,
+                transmission: 'Manual',
+                fuel: 'Petrol',
+                seats: 5,
+                pricePerKm: 9,
+                image: '/images/maruti-swift.jpg',
+                features: ['Bluetooth', 'Air Conditioning']
+            }
+        ];
+
+        let carsData = [...defaultCars]; // Initialize with default cars
+
+        // Add a function to check for duplicate IDs
+        function validateCarData(cars) {
+            const seenIds = new Set();
+            return cars.filter(car => {
+                if (seenIds.has(car.id)) {
+                    console.error(`Duplicate car ID found: ${car.id}`);
+                    return false;
+                }
+                seenIds.add(car.id);
+                return true;
+            });
+        }
+
+        // Update the fetchCars function to validate car data
+        async function fetchCars() {
+            try {
+                const response = await fetch('/api/cars');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cars');
+                }
+                let cars = await response.json();
+                
+                // Validate and remove any duplicates
+                cars = validateCarData(cars);
+                
+                if (!Array.isArray(cars) || cars.length === 0) {
+                    console.log('No cars found from server, using default cars');
+                    carsData = validateCarData(defaultCars);
+                } else {
+                    carsData = cars;
+                }
+                displaySearchResults();
+            } catch (error) {
+                console.error('Error:', error);
+                carsData = validateCarData(defaultCars);
+                displaySearchResults();
+            }
+        }
+
+        const carQuotes = [
+            {
+                text: "The cars we drive say a lot about us.",
+                author: "Alexandra Paul"
+            },
+            {
+                text: "Life is like a car journey. Sometimes you need to take a detour to reach your destination.",
+                author: "Unknown"
+            },
+            {
+                text: "I couldn't find the car of my dreams, so I built it myself.",
+                author: "Ferdinand Porsche"
+            },
+            {
+                text: "Everything in life is somewhere else, and you get there in a car.",
+                author: "E. B. White"
+            },
+            {
+                text: "A car is not a luxury; it's a means of freedom.",
+                author: "Unknown"
+            }
+        ];
+
+        function displayRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * carQuotes.length);
+            const quote = carQuotes[randomIndex];
+            document.getElementById('carQuote').textContent = quote.text;
+            document.getElementById('quoteAuthor').textContent = `- ${quote.author}`;
+        }
+
+        // Add this array to store bookings when server is not available
+        let localBookings = [];
+
+        // Update the rentCar function to handle the booking success better
+        async function rentCar() {
+            const name = document.getElementById('customerName').value.trim();
+            const mobileNumber = document.getElementById('mobileNumber').value.trim();
+            const carId = parseInt(document.getElementById('carId').value);
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const estimatedKm = parseInt(document.getElementById('estimatedKm').value);
+
+            if (!name || !mobileNumber || !carId || !startDate || !endDate || !estimatedKm) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const car = carsData.find(c => c.id === carId);
+            if (!car) {
+                alert('Invalid car selection');
+                return;
+            }
+
+            try {
+                const isAvailable = await checkAvailability(carId, startDate, endDate);
+                if (!isAvailable) {
+                    alert('Car is not available for the selected dates. Please select different dates or another car.');
+                    return;
+                }
+
+                const totalAmount = car.pricePerKm * estimatedKm;
+
+                const bookingData = {
+                    carId,
+                    customerName: name,
+                    mobileNumber,
+                    startDate,
+                    endDate,
+                    estimatedKm,
+                    totalAmount,
+                    status: 'confirmed',
+                    userId: userData._id
+                };
+
+                const response = await fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userData.token}`
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to create booking');
+                }
+
+                // Update the booking history immediately with the new booking
+                const newBooking = {
+                    ...bookingData,
+                    id: result.bookingId || 'NEW'
+                };
+
+                // Get the existing bookings list element
+                const bookingsList = document.getElementById('bookingsList');
+                
+                // Create the new booking HTML
+                const bookingHTML = `
+                    <div class="booking-item">
+                        <h3>Booking ID: ${newBooking.id}</h3>
+                        <div class="booking-details">
+                            <p><strong>Customer Name:</strong> ${newBooking.customerName}</p>
+                            <p><strong>Mobile:</strong> ${newBooking.mobileNumber}</p>
+                            <p><strong>Car:</strong> ${car.brand} ${car.model}</p>
+                            <p><strong>Start Date:</strong> ${new Date(newBooking.startDate).toLocaleDateString()}</p>
+                            <p><strong>End Date:</strong> ${new Date(newBooking.endDate).toLocaleDateString()}</p>
+                            <p><strong>Estimated KM:</strong> ${newBooking.estimatedKm}</p>
+                            <p><strong>Total Amount:</strong> Rs. ${newBooking.totalAmount}</p>
+                            <p><strong>Status:</strong> <span class="status-confirmed">Confirmed</span></p>
+                        </div>
+                    </div>
+                `;
+
+                // Add the new booking to the top of the list
+                if (bookingsList.firstChild) {
+                    bookingsList.insertAdjacentHTML('afterbegin', bookingHTML);
+                } else {
+                    bookingsList.innerHTML = bookingHTML;
+                }
+
+                // Clear the form and update UI
+                document.getElementById('rentForm').reset();
+                document.getElementById('totalAmount').textContent = 'Total Amount: Rs. 0';
+                
+                // Show success message
+                alert(`Booking Confirmed!\nTotal Amount: Rs. ${totalAmount}`);
+                
+                // Refresh the car list
+                await fetchCars();
+                
+                // Scroll to the new booking
+                document.getElementById('bookings').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Failed to create booking. Please try again.');
+            }
+        }
+
+        async function getBookingHistory() {
+            try {
+                const response = await fetch('/api/bookings');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch booking history');
+                }
+                const bookings = await response.json();
+                displayBookingHistory(bookings);
+            } catch (error) {
+                console.error('Error fetching booking history:', error);
+            }
+        }
+
+        async function checkAvailability(carId, startDate, endDate) {
+            if (!carId || !startDate || !endDate) {
+                return false;
+            }
+
+            try {
+                const response = await fetch(`/api/car-availability/${carId}?startDate=${startDate}&endDate=${endDate}`, {
+                    headers: {
+                        'Authorization': `Bearer ${userData.token}` // Add token for authentication
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to check availability');
+                }
+
+                const data = await response.json();
+                return data.available;
+            } catch (error) {
+                console.error('Error checking availability:', error);
+                return false; // Return false on error to prevent booking
+            }
+        }
+
+        // Update window.onload to show all cars
+        window.onload = async function() {
+            try {
+                document.getElementById('username-display').textContent = userData.username;
+                // Initialize with default cars
+                carsData = [...defaultCars];
+                setupDateValidation();
+                displayRandomQuote();
+                // Run one-time cleanup for Corolla booking
+                cleanupDuplicateCorollaBooking();
+                // Display all cars and bookings
+                displaySearchResults();
+                displayBookingHistory(JSON.parse(localStorage.getItem('localBookings')) || []);
+            } catch (error) {
+                console.error('Dashboard initialization error:', error);
+            }
+        };
+
+        // Update setupDateValidation to remove availability filtering
+        function setupDateValidation() {
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            
+            // Set minimum date to today
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            startDateInput.min = todayStr;
+            
+            startDateInput.addEventListener('change', function() {
+                // Set minimum end date to start date
+                endDateInput.min = this.value;
+                if (endDateInput.value && endDateInput.value < this.value) {
+                    endDateInput.value = this.value;
+                }
+            });
+        }
+
+        function updateTotalAmount() {
+            const carId = document.getElementById('carId').value;
+            const estimatedKm = document.getElementById('estimatedKm').value;
+            const car = carsData.find(c => c.id === parseInt(carId));
+            
+            if (car && estimatedKm > 0) {
+                const totalAmount = car.pricePerKm * estimatedKm;
+                document.getElementById('totalAmount').textContent = `Total Amount: Rs. ${totalAmount}`;
+            }
+        }
+
+        // Function to update available cars based on selected dates
+        async function updateAvailableCars() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                // If dates aren't selected yet, show all cars
+                displaySearchResults(document.getElementById('carType').value);
+                return;
+            }
+            
+            try {
+                // Get all bookings from the server
+                const response = await fetch('/api/bookings');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch bookings');
+                }
+                
+                const bookings = await response.json();
+                
+                // Filter cars that are available for the selected dates
+                const availableCars = carsData.filter(car => {
+                    // Check if there are any bookings for this car that overlap with the selected dates
+                    const carBookings = bookings.filter(booking => booking.carId === car.id);
+                    
+                    const start = new Date(startDate);
+                    const end = new Date(endDate);
+                    
+                    // If no bookings for this car, it's available
+                    if (!carBookings || carBookings.length === 0) {
+                        return true;
+                    }
+                    
+                    // Check if any booking overlaps with the selected dates
+                    return !carBookings.some(booking => {
+                        const bookingStart = new Date(booking.startDate);
+                        const bookingEnd = new Date(booking.endDate);
+                        
+                        // Convert all dates to timestamps for comparison
+                        const startTime = start.getTime();
+                        const endTime = end.getTime();
+                        const bookingStartTime = bookingStart.getTime();
+                        const bookingEndTime = bookingEnd.getTime();
+                        
+                        // Check for overlap
+                        return (startTime <= bookingEndTime && endTime >= bookingStartTime);
+                    });
+                });
+                
+                // Display only the available cars
+                displayFilteredCars(availableCars, document.getElementById('carType').value);
+            } catch (error) {
+                console.error('Error checking car availability:', error);
+                // If there's an error, show all cars
+                displaySearchResults(document.getElementById('carType').value);
+            }
+        }
+
+        // Update the displayFilteredCars function to prevent duplicates and handle images better
+        function displayFilteredCars(filteredCars, carTypeFilter = '') {
+            const carList = document.getElementById('carList');
+            if (!carList) {
+                console.error('Car list element not found');
+                return;
+            }
+
+            carList.innerHTML = '';
+            
+            // Apply car type filter if specified
+            const typeFilteredCars = carTypeFilter ? 
+                filteredCars.filter(car => car.type === carTypeFilter) : 
+                filteredCars;
+
+            // Remove duplicates based on car ID
+            const uniqueCars = Array.from(new Map(typeFilteredCars.map(car => [car.id, car])).values());
+
+            if (uniqueCars.length === 0) {
+                carList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No cars match the selected criteria.</p>';
+                return;
+            }
+
+            uniqueCars.forEach(async car => {
+                const carDiv = document.createElement('div');
+                carDiv.classList.add('car');
+                
+                // Get booking information for this car
+                let bookingInfo = '';
+                try {
+                    const response = await fetch('/api/bookings');
+                    if (response.ok) {
+                        const bookings = await response.json();
+                        const carBookings = bookings.filter(b => b.carId === car.id);
+                        if (carBookings.length > 0) {
+                            bookingInfo = carBookings.map(booking => {
+                                const startDate = new Date(booking.startDate);
+                                const endDate = new Date(booking.endDate);
+                                const formatDate = (date) => {
+                                    const day = date.getDate().toString().padStart(2, '0');
+                                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                                    const year = date.getFullYear();
+                                    return `${day}/${month}/${year}`;
+                                };
+                                return `
+                                    <div class="booking-alert">
+                                        <p>⚠️ Booked: ${formatDate(startDate)} to ${formatDate(endDate)}</p>
+                                    </div>
+                                `;
+                            }).join('');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching bookings:', error);
+                }
+
+                // Create features HTML
+                const featuresHTML = car.features ? 
+                    `<div class="car-features">
+                        ${car.features.map(feature => `<span class="car-feature">${feature}</span>`).join('')}
+                    </div>` : '';
+
+                carDiv.innerHTML = `
+                    <div class="car-image-container">
+                        <img src="${car.image.toLowerCase()}" 
+                             alt="${car.brand} ${car.model}"
+                             onerror="this.onerror=null; this.src='/images/car-placeholder.jpg';"
+                             loading="lazy">
+                    </div>
+                    ${bookingInfo}
+                    <div class="car-details">
+                        <p><strong>ID:</strong> ${car.id}</p>
+                        <p><strong>Type:</strong> ${car.type}</p>
+                        <p><strong>Brand:</strong> ${car.brand}</p>
+                        <p><strong>Model:</strong> ${car.model}</p>
+                        <p><strong>Year:</strong> ${car.year || 'N/A'}</p>
+                        <p><strong>Transmission:</strong> ${car.transmission || 'N/A'}</p>
+                        <p><strong>Fuel:</strong> ${car.fuel || 'N/A'}</p>
+                        <p><strong>Seats:</strong> ${car.seats || 'N/A'}</p>
+                        <p><strong>Price/km:</strong> Rs. ${car.pricePerKm}</p>
+                    </div>
+                    ${featuresHTML}
+                    <button onclick="rentCar(${car.id})" class="rent-button">Rent This Car</button>
+                `;
+                carList.appendChild(carDiv);
+            });
+        }
+
+        function displaySearchResults(carTypeFilter = '') {
+            const carList = document.getElementById('carList');
+            if (!carList) {
+                console.error('Car list element not found');
+                return;
+            }
+
+            carList.innerHTML = '';
+            const filteredCars = carTypeFilter ? 
+                carsData.filter(car => car.type === carTypeFilter) : 
+                carsData;
+
+            if (filteredCars.length === 0) {
+                carList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No cars match the selected criteria.</p>';
+                return;
+            }
+
+            filteredCars.forEach(car => {
+                const carDiv = document.createElement('div');
+                carDiv.classList.add('car');
+                
+                // Get booking information for this car from localStorage
+                const existingBookings = JSON.parse(localStorage.getItem('localBookings')) || [];
+                const carBookings = existingBookings.filter(b => b.carId === car.id);
+                
+                let bookingInfo = '';
+                if (carBookings.length > 0) {
+                    // Sort bookings by date
+                    carBookings.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                    
+                    bookingInfo = carBookings.map(booking => {
+                        const startDate = new Date(booking.startDate);
+                        const endDate = new Date(booking.endDate);
+                        const formatDate = (date) => {
+                            const day = date.getDate().toString().padStart(2, '0');
+                            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                            const year = date.getFullYear();
+                            return `${day}/${month}/${year}`;
+                        };
+                        return `
+                            <div class="booking-alert">
+                                <p>⚠️ Booked: ${formatDate(startDate)} to ${formatDate(endDate)}</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                // Create features HTML
+                const featuresHTML = car.features ? 
+                    `<div class="car-features">
+                        ${car.features.map(feature => `<span class="car-feature">${feature}</span>`).join('')}
+                    </div>` : '';
+                
+                carDiv.innerHTML = `
+                    <div class="car-image-container">
+                        <img src="${car.image}" 
+                             alt="${car.brand} ${car.model}"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=Car+Image';"
+                             loading="lazy">
+                    </div>
+                    ${bookingInfo}
+                    <div class="car-details">
+                        <p><strong>ID:</strong> ${car.id}</p>
+                        <p><strong>Type:</strong> ${car.type}</p>
+                        <p><strong>Brand:</strong> ${car.brand}</p>
+                        <p><strong>Model:</strong> ${car.model}</p>
+                        <p><strong>Year:</strong> ${car.year || 'N/A'}</p>
+                        <p><strong>Transmission:</strong> ${car.transmission || 'N/A'}</p>
+                        <p><strong>Fuel:</strong> ${car.fuel || 'N/A'}</p>
+                        <p><strong>Seats:</strong> ${car.seats || 'N/A'}</p>
+                        <p><strong>Price/km:</strong> Rs. ${car.pricePerKm}</p>
+                    </div>
+                    ${featuresHTML}
+                    <button onclick="rentCar(${car.id})" class="rent-button">Rent This Car</button>
+                `;
+                carList.appendChild(carDiv);
+            });
+        }
+
+        function rentCar(id) {
+            // Find the car in our data
+            const car = carsData.find(c => c.id === id);
+            if (!car) return; // Silent return without alert
+
+            // Set the car ID in the form and make it readonly
+            const carIdInput = document.getElementById('carId');
+            carIdInput.value = id;
+            carIdInput.setAttribute('readonly', true);
+            carIdInput.style.backgroundColor = '#f0f0f0';
+            
+            // Update total amount if estimated kilometers are already entered
+            updateTotalAmount();
+            
+            // Scroll to the rental form
+            const rentForm = document.getElementById('rent');
+            rentForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Focus on the customer name field
+            setTimeout(() => {
+                document.getElementById('customerName').focus();
+            }, 800);
+        }
+
+        function searchCars() {
+            const carType = document.getElementById('carType').value;
+            displaySearchResults(carType); // Only filter by car type
+        }
+
+        function logout() {
+            localStorage.removeItem('userData');
+            window.location.href = '/';
+        }
+
+        // Update the displayBookingHistory function to handle user-specific bookings
+        function displayBookingHistory(bookings) {
+            const bookingsSection = document.getElementById('bookings');
+            const bookingsList = document.getElementById('bookingsList');
+            
+            if (!bookingsList || !bookingsSection) return;
+
+            // Get current user's ID from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('userData'));
+            if (!currentUser || !currentUser._id) {
+                bookingsSection.style.display = 'none';
+                return;
+            }
+
+            // Filter bookings for current user only
+            const userBookings = bookings.filter(booking => booking.userId === currentUser._id);
+
+            // Hide the section if user has no bookings
+            if (!userBookings || userBookings.length === 0) {
+                bookingsSection.style.display = 'none';
+                return;
+            }
+
+            // Show the section and display user's bookings
+            bookingsSection.style.display = 'block';
+
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            };
+
+            // Sort bookings by date (most recent first)
+            const sortedBookings = userBookings.sort((a, b) => 
+                new Date(b.startDate) - new Date(a.startDate)
+            );
+
+            const bookingsHTML = sortedBookings.map(booking => {
+                const car = carsData.find(c => c.id === booking.carId);
+                return `
+                    <div class="booking-item">
+                        <h3>Booking ID: ${booking.id}</h3>
+                        <div class="booking-details">
+                            <p><strong>Customer Name:</strong> ${booking.customerName}</p>
+                            <p><strong>Mobile:</strong> ${booking.mobileNumber}</p>
+                            <p><strong>Car:</strong> ${car ? `${car.brand} ${car.model}` : `Car ID: ${booking.carId}`}</p>
+                            <p><strong>Start Date:</strong> ${formatDate(booking.startDate)}</p>
+                            <p><strong>End Date:</strong> ${formatDate(booking.endDate)}</p>
+                            <p><strong>Estimated KM:</strong> ${booking.estimatedKm}</p>
+                            <p><strong>Total Amount:</strong> Rs. ${booking.totalAmount}</p>
+                            <p><strong>Status:</strong> <span class="status-${booking.status.toLowerCase()}">${booking.status}</span></p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            bookingsList.innerHTML = bookingsHTML;
+        }
+
+        // Update the processBooking function to include user ID
+        async function processBooking(formData) {
+            const car = carsData.find(c => c.id === formData.carId);
+            if (!car) return;
+
+            try {
+                const currentUser = JSON.parse(localStorage.getItem('userData'));
+                if (!currentUser || !currentUser._id) {
+                    alert('Please log in to make a booking');
+                    return;
+                }
+
+                const existingBookings = JSON.parse(localStorage.getItem('localBookings')) || [];
+                
+                // Convert dates to midnight UTC for consistent comparison
+                const startDate = new Date(formData.startDate);
+                startDate.setUTCHours(0, 0, 0, 0);
+                const endDate = new Date(formData.endDate);
+                endDate.setUTCHours(23, 59, 59, 999);
+
+                // Find any overlapping bookings for this car
+                const conflictingBookings = existingBookings.filter(booking => {
+                    if (booking.carId !== formData.carId) return false;
+                    
+                    const bookingStart = new Date(booking.startDate);
+                    bookingStart.setUTCHours(0, 0, 0, 0);
+                    const bookingEnd = new Date(booking.endDate);
+                    bookingEnd.setUTCHours(23, 59, 59, 999);
+                    
+                    return (startDate <= bookingEnd && endDate >= bookingStart);
+                });
+
+                if (conflictingBookings.length > 0) {
+                    const formatDate = (date) => {
+                        return new Date(date).toLocaleDateString('en-GB');
+                    };
+                    
+                    const conflictMessage = conflictingBookings
+                        .map(booking => `${formatDate(booking.startDate)} to ${formatDate(booking.endDate)}`)
+                        .join('\n');
+                    
+                    alert(`This car is already booked for the following dates:\n\n${conflictMessage}\n\nPlease select different dates.`);
+                    return;
+                }
+
+                const totalAmount = car.pricePerKm * formData.estimatedKm;
+
+                // Create new booking with current user's ID
+                const newBooking = {
+                    ...formData,
+                    id: Date.now().toString(),
+                    totalAmount,
+                    status: 'confirmed',
+                    userId: currentUser._id,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    carDetails: {
+                        brand: car.brand,
+                        model: car.model,
+                        type: car.type
+                    }
+                };
+
+                // Add to local storage
+                existingBookings.push(newBooking);
+                localStorage.setItem('localBookings', JSON.stringify(existingBookings));
+
+                // Show success message
+                alert(`Booking Confirmed!\nTotal Amount: Rs. ${totalAmount}`);
+                
+                // Clear the form
+                document.getElementById('rentForm').reset();
+                document.getElementById('totalAmount').textContent = 'Total Amount: Rs. 0';
+                
+                // Update displays
+                displaySearchResults(document.getElementById('carType').value);
+                displayBookingHistory(existingBookings);
+                
+                // Scroll to the bookings section if user has bookings
+                const userBookings = existingBookings.filter(b => b.userId === currentUser._id);
+                if (userBookings.length > 0) {
+                    document.getElementById('bookings').scrollIntoView({ behavior: 'smooth' });
+                }
+
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Failed to create booking. Please try again.');
+            }
+        }
+
+        // Update event listeners for the date inputs
+        document.getElementById('estimatedKm').addEventListener('input', updateTotalAmount);
+        document.getElementById('carId').addEventListener('change', updateTotalAmount);
+
+        // Update the form reset handler to clear readonly on carId
+        document.getElementById('rentForm').addEventListener('reset', function() {
+            const carIdInput = document.getElementById('carId');
+            carIdInput.value = '';
+            carIdInput.setAttribute('readonly', true);
+            carIdInput.style.backgroundColor = '#f0f0f0';
+            document.getElementById('totalAmount').textContent = 'Total Amount: Rs. 0';
+        });
+
+        // Add one-time cleanup function for Toyota Corolla duplicate booking
+        function cleanupDuplicateCorollaBooking() {
+            const existingBookings = JSON.parse(localStorage.getItem('localBookings')) || [];
+            
+            // Get all Toyota Corolla bookings (car ID: 1)
+            const corollaBookings = existingBookings.filter(booking => booking.carId === 1);
+            
+            if (corollaBookings.length > 1) {
+                // Sort Corolla bookings by date (most recent first)
+                corollaBookings.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                
+                // Get the ID of the most recent Corolla booking
+                const latestCorollaBookingId = corollaBookings[0].id;
+                
+                // Remove only the latest Corolla booking, keep all other bookings
+                const updatedBookings = existingBookings.filter(booking => 
+                    booking.carId !== 1 || booking.id !== latestCorollaBookingId
+                );
+                
+                // Update localStorage
+                localStorage.setItem('localBookings', JSON.stringify(updatedBookings));
+                
+                // Update the displays
+                displaySearchResults(document.getElementById('carType').value);
+                displayBookingHistory(updatedBookings);
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .login-btn, .register-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .login-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .register-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .login-btn:hover {
+      background-color: #218838;
+    }
+
+    .register-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 15px 0;
+      color: #666;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #loginForm, #registerForm {
+      display: block;
+    }
+
+    #registerForm {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- Login Form -->
+    <form id="loginForm">
+      <h2>Welcome Back</h2>
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter Username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter Password">
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+      <div class="divider">OR</div>
+      <button type="button" class="register-btn" onclick="document.getElementById('loginForm').style.display='none';document.getElementById('registerForm').style.display='block';">Create New Account</button>
+    </form>
+
+    <!-- Register Form -->
+    <form id="registerForm">
+      <h2>Create Account</h2>
+      <div class="form-group">
+        <label for="reg-username">Username:</label>
+        <input type="text" id="reg-username" placeholder="Enter Username (min. 3 characters)">
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email:</label>
+        <input type="email" id="reg-email" placeholder="Enter Email">
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password:</label>
+        <input type="password" id="reg-password" placeholder="Enter Password (min. 6 characters)">
+      </div>
+      <button type="submit" class="register-btn">Register</button>
+      <div class="divider">OR</div>
+      <button type="button" class="login-btn" onclick="document.getElementById('registerForm').style.display='none';document.getElementById('loginForm').style.display='block';">Back to Login</button>
+    </form>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html> 
